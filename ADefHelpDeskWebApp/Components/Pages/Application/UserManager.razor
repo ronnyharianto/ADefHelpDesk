@@ -128,16 +128,20 @@
 	{
 		DTOUser NewDTOUser = new DTOUser();
 		NewDTOUser.userId = -1;
+		//NewDTOUser.userName = string.Empty;
 		NewDTOUser.userRoles = new List<RoleDTO>();
 		await EditUser(NewDTOUser);
 	}
+
 	async Task EditUser(DTOUser DTOUser)
 	{
 		Message = "";
 
-		DTOUser result = await DialogService.OpenAsync<UserEditControl>($"Edit User",
-		new Dictionary<string, object>() { { "SelectedDTOUser", DTOUser } },
-		new DialogOptions() { Width = "650px" });
+		DTOUser result = await DialogService.OpenAsync<UserEditControl>(
+			$"Edit User",
+			new Dictionary<string, object>() { { "SelectedDTOUser", DTOUser } },
+			new DialogOptions() { Width = "650px" }
+		);
 
 		if (result != null)
 		{

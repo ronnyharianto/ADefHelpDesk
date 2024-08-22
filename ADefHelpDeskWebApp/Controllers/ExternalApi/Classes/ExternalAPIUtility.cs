@@ -19,56 +19,56 @@
 //
 //
 using AdefHelpDeskBase.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ADefHelpDeskWebApp.Controllers.ExternalApi.Classes
 {
-    public static class ExternalAPIUtility
+	public static class ExternalAPIUtility
     {
         #region public static DTOTask MapAPITaskToTask(DTOAPITask objTask, DTOAPITaskDetail objTaskDetail)
         public static DTOTask MapAPITaskToTask(DTOAPITask objTask, DTOAPITaskDetail objTaskDetail)
         {
-            DTOTask paramTask = new DTOTask();
-            paramTask.assignedRoleId = objTask.assignedRoleId ?? -1;
-            paramTask.assignedRoleName = objTask.assignedRoleName ?? "";
-            paramTask.createdDate = objTask.createdDate ?? "";
-            paramTask.description = objTask.description ?? "";
-            paramTask.dueDate = objTask.dueDate ?? "";
-            paramTask.estimatedCompletion = objTask.estimatedCompletion ?? "";
-            paramTask.estimatedHours = objTask.estimatedHours;
-            paramTask.estimatedStart = objTask.estimatedStart ?? "";
-            paramTask.portalId = objTask.portalId ?? -1;
-            paramTask.priority = objTask.priority ?? "";
-            paramTask.requesterEmail = objTask.requesterEmail ?? "";
-            paramTask.requesterName = objTask.requesterName ?? "";
-            paramTask.requesterPhone = objTask.requesterPhone ?? "";
-            paramTask.requesterUserId = objTask.requesterUserId ?? -1;
-            paramTask.selectedTreeNodes = objTask.selectedTreeNodes;
-            paramTask.sendEmails = objTask.sendEmails ?? true;
-            paramTask.status = objTask.status ?? "";
-            paramTask.taskId = objTask.taskId ?? -1;
-            paramTask.ticketPassword = objTask.ticketPassword ?? "";
+			DTOTask paramTask = new()
+			{
+				assignedRoleId = objTask.assignedRoleId ?? -1,
+				assignedRoleName = objTask.assignedRoleName ?? "",
+				createdDate = objTask.createdDate ?? "",
+				description = objTask.description ?? "",
+				dueDate = objTask.dueDate ?? "",
+				estimatedCompletion = objTask.estimatedCompletion ?? "",
+				estimatedHours = objTask.estimatedHours,
+				estimatedStart = objTask.estimatedStart ?? "",
+				portalId = objTask.portalId ?? -1,
+				priority = objTask.priority ?? "",
+				requesterEmail = objTask.requesterEmail ?? "",
+				requesterName = objTask.requesterName ?? "",
+				requesterPhone = objTask.requesterPhone ?? "",
+				requesterUserId = objTask.requesterUserId ?? -1,
+				selectedTreeNodes = objTask.selectedTreeNodes,
+				sendEmails = objTask.sendEmails ?? true,
+				status = objTask.status ?? "",
+				taskId = objTask.taskId ?? -1,
+				ticketPassword = objTask.ticketPassword ?? ""
+			};
 
-            if (objTaskDetail != null)
+			if (objTaskDetail != null)
             {
-                DTOTaskDetail paramDTOTaskDetail = new DTOTaskDetail();
-                paramDTOTaskDetail.colDTOAttachment = new List<DTOAttachment>();
-                paramDTOTaskDetail.contentType = objTaskDetail.contentType ?? "";
-                paramDTOTaskDetail.description = objTaskDetail.taskDetailDescription ?? "";
-                paramDTOTaskDetail.detailId = objTaskDetail.detailId ?? -1;
-                paramDTOTaskDetail.detailType = objTaskDetail.detailType ?? "";
-                paramDTOTaskDetail.emailDescription = objTaskDetail.emailDescription ?? "";
-                paramDTOTaskDetail.insertDate = objTaskDetail.insertDate ?? "";
-                paramDTOTaskDetail.sendEmails = objTaskDetail.sendTaskDetailEmails ?? false;
-                paramDTOTaskDetail.startTime = objTaskDetail.startTime ?? "";
-                paramDTOTaskDetail.stopTime = objTaskDetail.stopTime ?? "";
-                paramDTOTaskDetail.userId = objTaskDetail.userId ?? -1;
-                paramDTOTaskDetail.userName = objTaskDetail.userName ?? "";
+				DTOTaskDetail paramDTOTaskDetail = new()
+				{
+					colDTOAttachment = [],
+					contentType = objTaskDetail.contentType ?? "",
+					description = objTaskDetail.taskDetailDescription ?? "",
+					detailId = objTaskDetail.detailId ?? -1,
+					detailType = objTaskDetail.detailType ?? "",
+					emailDescription = objTaskDetail.emailDescription ?? "",
+					insertDate = objTaskDetail.insertDate ?? "",
+					sendEmails = objTaskDetail.sendTaskDetailEmails ?? false,
+					startTime = objTaskDetail.startTime ?? "",
+					stopTime = objTaskDetail.stopTime ?? "",
+					userId = objTaskDetail.userId ?? -1,
+					userName = objTaskDetail.userName ?? ""
+				};
 
-                paramTask.colDTOTaskDetail = new List<DTOTaskDetail>();
-                paramTask.colDTOTaskDetail.Add(paramDTOTaskDetail);
+				paramTask.colDTOTaskDetail = [paramDTOTaskDetail];
             }
 
             return paramTask;

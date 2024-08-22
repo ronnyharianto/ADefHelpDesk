@@ -18,40 +18,25 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AdefHelpDeskBase.Models;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using System.Text;
-using Newtonsoft.Json;
 using ADefHelpDeskWebApp.Classes;
-using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
 using System.Data;
 using AdefHelpDeskBase.Models.DataContext;
 using Microsoft.EntityFrameworkCore;
 using ADefHelpDeskWebApp.Controllers;
-using Microsoft.AspNetCore.Hosting;
 using ADefHelpDeskWebApp.Controllers.ExternalApi.Classes;
 using Microsoft.Extensions.Caching.Memory;
 using ADefHelpDeskWebApp.Models;
-using System.IO;
 using ADefHelpDeskWebApp.Controllers.InternalApi;
 using ADefHelpDeskWebApp.Jwt;
 
 namespace AdefHelpDeskBase.Controllers.WebInterface
 {
-    [ApiController]
+	[ApiController]
     [ApiExplorerSettings(GroupName = "v1")]
     [Produces("application/json")]
     [Route("api/[controller]")]
@@ -292,12 +277,14 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
             
             var task = objTask;
 
-            DTOStatus objDTOStatus = new DTOStatus();
-            objDTOStatus.Success = true;
-            objDTOStatus.StatusMessage = "";
+			DTOStatus objDTOStatus = new()
+			{
+				Success = true,
+				StatusMessage = ""
+			};
 
-            // Get Settings
-            string CurrentHostLocation = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+			// Get Settings
+			string CurrentHostLocation = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
             string ContentRootPath = _hostEnvironment.ContentRootPath;
             string strCurrentUser = this.User.Claims.Where(x => x.Type == "Username").FirstOrDefault().Value;
             string strConnectionString = GetConnectionString();

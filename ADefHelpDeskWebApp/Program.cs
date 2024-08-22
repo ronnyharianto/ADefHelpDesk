@@ -8,7 +8,6 @@ using AdefHelpDeskBase.Controllers;
 using AdefHelpDeskBase.Models;
 using AdefHelpDeskBase.Models.DataContext;
 using ADefHelpDeskWebApp.Components;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +15,9 @@ using Microsoft.OpenApi.Models;
 using Radzen;
 using System.Text;
 using Tewr.Blazor.FileReader;
-using Microsoft.Extensions.DependencyInjection;
 using ADefHelpDeskWebApp.Components.Account;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ADefHelpDeskWebApp
 {
@@ -32,11 +29,11 @@ namespace ADefHelpDeskWebApp
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
+                            .AddInteractiveServerComponents();
 
             // Read the connection string from the appsettings.json file
             builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables();
+                                 .AddEnvironmentVariables();
 
             // Get HostingEnvironment
             var env = builder.Environment;
@@ -49,8 +46,10 @@ namespace ADefHelpDeskWebApp
             builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/LogIn");
 
             builder.Services.AddDbContext<ADefHelpDeskContext>(options =>
-            options.UseSqlServer(
-                builder.Configuration.GetConnectionString("DefaultConnection")));
+            {
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connectionString);
+            });
 
             string GoogleClientID = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
             string GoogleClientSecret = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
@@ -61,7 +60,7 @@ namespace ADefHelpDeskWebApp
 
             try
             {
-                GeneralSettings objGeneralSettings = new GeneralSettings(builder.Configuration.GetConnectionString("DefaultConnection"));
+                GeneralSettings objGeneralSettings = new(builder.Configuration.GetConnectionString("DefaultConnection"));
 
                 if (objGeneralSettings.GoogleClientID.Trim() != "")
                 {
@@ -75,8 +74,8 @@ namespace ADefHelpDeskWebApp
                     MicrosoftClientSecret = objGeneralSettings.MicrosoftClientSecret.Trim();
                 }
 
-                signingKeyBytes = Encoding.UTF8.GetBytes(ApiSecurityController.GetAPIEncryptionKeyKey(
-                    builder.Configuration.GetConnectionString("DefaultConnection")));
+                string encryptionKey = ApiSecurityController.GetAPIEncryptionKeyKey(builder.Configuration.GetConnectionString("DefaultConnection"));
+                signingKeyBytes = Encoding.UTF8.GetBytes(encryptionKey);
             }
             catch
             {
@@ -85,13 +84,15 @@ namespace ADefHelpDeskWebApp
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(signingKeyBytes);
+            SymmetricSecurityKey signingKey = new(signingKeyBytes);
 
-            builder.Services.AddAuthentication(options =>
+            var authenticationBuilder = builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            }).AddJwtBearer(options =>
+            });
+
+            authenticationBuilder.AddJwtBearer(options =>
             {
                 options.SaveToken = true;
                 options.ClaimsIssuer = "ADefHelpDesk";
@@ -103,27 +104,34 @@ namespace ADefHelpDeskWebApp
                     ValidateAudience = false,
                     ValidateLifetime = true
                 };
-            }).AddGoogle(googleoptions =>
-            {
-                googleoptions.ClientId = GoogleClientID;
-                googleoptions.ClientSecret = GoogleClientSecret;
-            })
-           .AddMicrosoftAccount(microsoftOptions =>
-           {
-               microsoftOptions.ClientId = MicrosoftClientId;
-               microsoftOptions.ClientSecret = MicrosoftClientSecret;
-           }).AddIdentityCookies();
+            });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            authenticationBuilder.AddGoogle(options =>
+            {
+                options.ClientId = GoogleClientID;
+                options.ClientSecret = GoogleClientSecret;
+            });
+
+            authenticationBuilder.AddMicrosoftAccount(options =>
+            {
+                options.ClientId = MicrosoftClientId;
+                options.ClientSecret = MicrosoftClientSecret;
+            });
+
+            authenticationBuilder.AddIdentityCookies();
+
+            builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("DefaultConnection")));
+                    builder.Configuration.GetConnectionString("DefaultConnection")
+                )
+            );
 
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddSignInManager()
-            .AddRoleManager<RoleManager<IdentityRole>>() // Add RoleManager
-            .AddDefaultTokenProviders();
+                            .AddRoles<IdentityRole>()
+                            .AddEntityFrameworkStores<ApplicationDbContext>()
+                            .AddSignInManager()
+                            .AddRoleManager<RoleManager<IdentityRole>>() // Add RoleManager
+                            .AddDefaultTokenProviders();
 
             // Allows appsettings.json to be updated programatically
             builder.Services.ConfigureWritable<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
@@ -235,7 +243,7 @@ namespace ADefHelpDeskWebApp
             app.UseSwaggerUI();
 
             app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+               .AddInteractiveServerRenderMode();
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();

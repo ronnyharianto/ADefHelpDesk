@@ -28,19 +28,19 @@ namespace ADefHelpDeskWebApp.Classes
     {
         [Key]
         public int userId { get; set; }
-        public string userName { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        /// <summary>
-        /// You cannot create SuperUser from API
-        /// </summary>
-        [DefaultValue("false")]
+        public string userName { get; set; } = string.Empty;
+        public string firstName { get; set; } = string.Empty;
+		public string lastName { get; set; } = string.Empty;
+		/// <summary>
+		/// You cannot create SuperUser from API
+		/// </summary>
+		[DefaultValue("false")]
         public bool isSuperUser { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public string riapassword { get; set; }
+        public string email { get; set; } = string.Empty;
+        public string password { get; set; } = string.Empty;
+		public string riapassword { get; set; }
         public string verificationCode { get; set; }
 
-        public List<RoleDTO> userRoles { get; set; }
+        public List<RoleDTO> userRoles { get; set; } = [];
     }
 }

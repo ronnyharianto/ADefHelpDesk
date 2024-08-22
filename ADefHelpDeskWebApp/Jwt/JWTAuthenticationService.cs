@@ -51,7 +51,7 @@ namespace ADefHelpDeskWebApp.Jwt
 
             if (claim != null)
             {
-                if(claim.Value.ToLower() == "false")
+                if(claim.Value.Equals("false", StringComparison.CurrentCultureIgnoreCase))
                 {
                     throw new Exception($"Permission to execute method {ControllerMethod} is not allowed");
                 }

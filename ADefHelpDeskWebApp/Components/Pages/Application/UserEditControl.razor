@@ -115,7 +115,7 @@
 						</Columns>
 					</RadzenDataGrid>
 				</RadzenTabsItem>
-				<RadzenTabsItem Text="External Logins">
+				@* <RadzenTabsItem Text="External Logins">
 					<!-- Display list of currentLogins -->
 					@if (currentLogins != null)
 					{
@@ -135,7 +135,7 @@
 							</tbody>
 						</table>
 					}
-				</RadzenTabsItem>
+				</RadzenTabsItem> *@
 			</Tabs>
 		</RadzenTabs>
 	</div>
@@ -167,7 +167,7 @@
 
 	ApplicationUser SelectedApplicationUser = new ApplicationUser();
 
-	private IList<UserLoginInfo> currentLogins;
+	//private IList<UserLoginInfo> currentLogins;
 
 	System.Security.Claims.ClaimsPrincipal CurrentUser;
 	RadzenDataGrid<RoleDTO> grid;
@@ -206,7 +206,7 @@
 		// Convert SelectedDTOUser to ApplicationUser
 		SelectedApplicationUser = await userManager.FindByNameAsync(SelectedDTOUser.userName);
 
-		currentLogins = await userManager.GetLoginsAsync(SelectedApplicationUser);
+		//currentLogins = await userManager.GetLoginsAsync(SelectedApplicationUser);
 	}
 
 	private void OnTabChange(int index)
@@ -348,7 +348,7 @@
 		if (result.Succeeded)
 		{
 			// Refresh the current logins
-			currentLogins = currentLogins.Where(ul => ul.LoginProvider != objUserLoginInfo.LoginProvider).ToList();
+			//currentLogins = currentLogins.Where(ul => ul.LoginProvider != objUserLoginInfo.LoginProvider).ToList();
 			StateHasChanged();
 			return;
 		}
