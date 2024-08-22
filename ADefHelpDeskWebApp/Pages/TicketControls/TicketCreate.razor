@@ -38,7 +38,7 @@
                         <tbody>
                             @if (IsAdmin)
                             {
-                                <tr>
+                                <tr style="display:none">
                                     <td></td>
                                     <td>
                                         @if (objCurrentUser.userId != -1)
@@ -54,20 +54,21 @@
                             }
                             <tr>
                                 <td>
-                                    <b>Name:</b>
+                                    <b>Requestor Name:</b>
                                 </td>
                                 <td>
-                                    @if (!ShowManualUser)
+                                    @* @if (!ShowManualUser)
                                     {
                                         @($"{objCurrentUser.firstName} {objCurrentUser.lastName}  ")
                                     }
                                     else
                                     {
                                         <RadzenTextBox @bind-Value=NewTask.RequesterName style="width: 100%;" />
-                                    }
+                                    } *@
+                                    <RadzenTextBox @bind-Value=NewTask.RequesterName style="width: 100%;" />
                                 </td>
                             </tr>
-                            <tr>
+                            <tr style="display:none">
                                 <td>
                                     <b>Email:</b>
                                 </td>
@@ -84,21 +85,21 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <b>Phone:</b>
+                                    <b>Requestor Phone:</b>
                                 </td>
                                 <td>
                                     <RadzenTextBox @bind-Value=NewTask.RequesterPhone style="width: 100%;" />
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style="vertical-align:top">
                                     <b>Description:</b>
                                 </td>
                                 <td>
-                                    <RadzenTextBox @bind-Value=NewTask.Description style="width: 100%;" />
+                                    <RadzenTextArea @bind-Value=NewTask.Description style="width: 100%;" Rows="5" />
                                 </td>
                             </tr>
-                            <tr>
+                            <tr style="display:none">
                                 <td>
                                     <b>Detail:</b>
                                 </td>
@@ -106,7 +107,7 @@
                                     <RadzenTextArea @bind-Value=@NewTaskDetail.Description Cols="30" Rows="3" />
                                 </td>
                             </tr>
-                            <tr>
+                            <tr style="display:none">
                                 <td>
                                     <b>Due Date:</b>
                                 </td>
@@ -134,7 +135,7 @@
                             ((IsAdmin == true) && (FileUploadPermission == "Administrator"))
                             )
                             {
-                                <tr>
+                                <tr style="display:none">
                                     <td>
                                         <b>File Upload:</b>
                                     </td>
@@ -148,7 +149,7 @@
                 </RadzenTabsItem>
                 @if (IsAdmin == true)
                 {
-                    <RadzenTabsItem Text="Ticket Details">
+                    <RadzenTabsItem Text="Ticket Details" Visible=false>
                         <table class="form-group" cellpadding="4" cellspacing="4">
                             <tbody>
                                 <tr>
@@ -306,20 +307,20 @@
         // Get the current user
         CurrentUser = (await authenticationStateTask).User;
 
-        if (CurrentUser.Identity != null)
-        {
-            objCurrentUser = UtilitySecurity.UserFromUserName(CurrentUser.Identity.Name, strDefaultConnection);
-        }
+        // if (CurrentUser.Identity != null)
+        // {
+        //     objCurrentUser = UtilitySecurity.UserFromUserName(CurrentUser.Identity.Name, strDefaultConnection);
+        // }
 
-        if (CurrentUser.Identity.IsAuthenticated)
-        {
-            ShowManualUser = false;
-            IsAdmin = UtilitySecurity.IsAdministrator(CurrentUser.Identity.Name ?? "", strDefaultConnection);
-        }
-        else
-        {
-            IsAdmin = false;
-        }
+        // if (CurrentUser.Identity.IsAuthenticated)
+        // {
+        //     ShowManualUser = false;
+        //     IsAdmin = UtilitySecurity.IsAdministrator(CurrentUser.Identity.Name ?? "", strDefaultConnection);
+        // }
+        // else
+        // {
+        //     IsAdmin = false;
+        // }
 
         _ApplicationSettingsController = (ApplicationSettingsController)ScopedServices.GetService(typeof(ApplicationSettingsController));
         _RoleController = (RoleController)ScopedServices.GetService(typeof(RoleController));
