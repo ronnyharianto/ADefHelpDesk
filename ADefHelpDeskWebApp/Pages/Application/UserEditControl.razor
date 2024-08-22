@@ -207,7 +207,7 @@
 		{
 			// Convert SelectedDTOUser to ApplicationUser
 			SelectedApplicationUser = await userManager.FindByNameAsync(SelectedDTOUser.userName);
-
+		
 			currentLogins = await userManager.GetLoginsAsync(SelectedApplicationUser);
 		}
 	}
