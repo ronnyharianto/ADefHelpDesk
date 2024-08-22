@@ -7,6 +7,7 @@
 @using AdefHelpDeskBase.Models.DataContext
 @using Microsoft.EntityFrameworkCore
 @using ADefHelpDeskWebApp.Pages.TicketControls
+@using System.Security.Claims
 
 @inject IConfiguration _configuration
 @inject IJSRuntime JSRuntime
@@ -31,7 +32,11 @@
 }
 else
 {
-    <TicketCreate ticketnumber=@ticketnumber ticketPassword=@ticketPassword />
+    <AuthorizeView>
+        <Authorized>
+            <TicketCreate ticketnumber=@ticketnumber ticketPassword=@ticketPassword />
+        </Authorized>
+    </AuthorizeView>
 }
 
 @code {
@@ -46,9 +51,11 @@ else
     [Parameter]
     public string ticketPassword { get; set; } = "";
 
+    bool IsAuthenticated = false;
     bool isInstalling = true;
     string paramWizardMode = "";
     string ErrorMessage = "";
+    ClaimsPrincipal CurrentUser;
 
     // ********************************
     string CurrentVersion = "05.00.00";
@@ -58,6 +65,14 @@ else
     {
         // Get database conection string
         string strDefaultConnection = _configuration["ConnectionStrings:DefaultConnection"];
+
+        if (authenticationStateTask != null)
+        {
+            // Get the current user
+            CurrentUser = (await authenticationStateTask).User;
+
+            IsAuthenticated = CurrentUser.Identity.IsAuthenticated;
+        }
 
         // Check for Install/Upgrade
         // The Index.razor page will detect this and load the

@@ -7,22 +7,15 @@ using ADefHelpDeskWebApp.Jwt;
 using AdefHelpDeskBase.Controllers;
 using AdefHelpDeskBase.Models;
 using AdefHelpDeskBase.Models.DataContext;
-using ADefHelpDeskWebApp.Components;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Radzen;
 using System.Text;
 using Tewr.Blazor.FileReader;
-using Microsoft.Extensions.DependencyInjection;
 using ADefHelpDeskWebApp.Components.Account;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.AspNetCore.Builder;
-using ADefHelpDeskWebApp.Areas.Identity;
 
 namespace ADefHelpDeskWebApp
 {
