@@ -19,28 +19,9 @@
 //
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using AdefHelpDeskBase.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using System.Security.Cryptography;
-using System.Text;
 using ADefHelpDeskWebApp.Classes;
-using System.IO;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using AdefHelpDeskBase.Models.DataContext;
 using MimeKit;
 
@@ -430,7 +411,7 @@ namespace ADefHelpDeskWebApp.Controllers.InternalApi
                 }
             }
 
-            if ((objTask.requesterUserId ?? -1) < 1)
+            if ((objTask.requesterUserId ?? -1) < 1 && objTask.sendEmails.HasValue && objTask.sendEmails.Value)
             {
                 EmailValidation objEmailValidation = new EmailValidation();
                 if (objTask.requesterEmail == null ||

@@ -77,7 +77,7 @@
                                         Style="width:300px" />
                         </FilterTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="DTOTask" Property="dueDate" Title="Due" Sortable=true Width="55px">
+                    <RadzenDataGridColumn TItem="DTOTask" Property="dueDate" Title="Due" Sortable=true Width="55px" Visible=false>
                         <FilterTemplate>
                             <RadzenDatePicker @bind-Value=@dtDueDate DateFormat="d" />
                         </FilterTemplate>
@@ -87,7 +87,7 @@
                             <RadzenDatePicker @bind-Value=@dtCreatedDate DateFormat="d" />
                         </FilterTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="DTOTask" Property="assignedRoleName" Title="Assigned" Sortable=true Width="50px">
+                    <RadzenDataGridColumn TItem="DTOTask" Property="assignedRoleName" Title="Assigned" Sortable=true Width="50px" Visible=false>
                         <FilterTemplate>
                             <RadzenDropDown Data=@rolesDropdown @bind-Value=@AssignedRoleId
                                         TextProperty="ItemLabel"

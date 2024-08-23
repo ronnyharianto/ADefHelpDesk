@@ -19,9 +19,6 @@
 //
 //
 using AdefHelpDeskBase.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ADefHelpDeskWebApp.Controllers.ExternalApi.Classes
 {
