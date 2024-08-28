@@ -304,6 +304,14 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
                 }
 
                 objDTOStatus = _uploadTaskController.CreateTaskMethod(strConnectionString, CurrentHostLocation, ContentRootPath, paramTask, objFile, strCurrentUser, intUserId, IsSuperUser, IsAdministrator, IsAuthenticated);
+                if (objDTOStatus.Success)
+                {
+                    objDTOStatus.Replies.Add($"Tiket telah berhasil dibuat. Nomor tiket: *{objDTOStatus.TaskId}*.\n\nAnda dapat cek status tiket dengan ketik *Status Tiket:_Nomor Tiket_*.");
+                }
+                else
+                {
+                    objDTOStatus.Replies.Add($"Tiket tidak berhasil dibuat. Harap menunggu informasi setelah kami menghubungi tim support.");
+                }
             }
             catch (Exception ex)
             {
@@ -352,6 +360,15 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
                     strCurrentUser,
                     intUserId,
                     IsAuthenticated);
+
+                if (objDTOStatus.Success)
+                {
+                    objDTOStatus.Replies.Add($"Tiket nomor *{objDTOStatus.TaskId}* telah *berhasil ditutup*.");
+                }
+                else
+                {
+                    objDTOStatus.Replies.Add($"Tiket tidak berhasil dibuat. Harap menunggu informasi setelah kami menghubungi tim support.");
+                }
             }
             catch (Exception ex)
             {
@@ -434,11 +451,12 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
         /// Get Task
         /// </summary>
         /// <param name="TaskId"></param>
+        /// <param name="RequesterPhone"></param>
         /// <returns></returns>
         // JwtBearerDefaults means this method will only work if a Jwt is being passed
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost("GetTask")]
-        public DTOTaskStatus GetTask([FromQuery] int TaskId)
+        public DTOTaskStatus GetTask([FromQuery] int TaskId, [FromQuery] string RequesterPhone)
         {
             _authenticationService.APISecurityCheck(this.User.Claims, "GetTask");
             
@@ -457,7 +475,7 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
             {
                 DTOTask obJDTOTask = new DTOTask();
                 obJDTOTask.taskId = TaskId;
-                obJDTOTask.ticketPassword = "";
+                obJDTOTask.ticketPassword = RequesterPhone;
 
                 objDTOStatus.Task = TaskController.GetTask(
                     obJDTOTask,
@@ -466,6 +484,15 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
                     strConnectionString,
                     strCurrentUser,
                     IsAuthenticated);
+
+                if (objDTOStatus.Success && objDTOStatus.Task.taskId > 0)
+                {
+                    objDTOStatus.Replies.Add($"Deskripsi Tiket: *{objDTOStatus.Task.description}*\n\nStatus Tiket: *{objDTOStatus.Task.status}*");
+                }
+                else
+                {
+                    objDTOStatus.Replies.Add($"Tiket anda tidak ditemukan. Harap menunggu informasi setelah kami menghubungi tim support.");
+                }
             }
             catch (Exception ex)
             {
@@ -479,7 +506,7 @@ namespace AdefHelpDeskBase.Controllers.WebInterface
 
         #region public DTOTaskDetail GetTaskDetail([FromQuery] int TaskDetailId)
         /// <summary>
-        /// Get Task
+        /// Get Task Detail
         /// </summary>
         /// <param name="TaskDetailId"></param>
         /// <returns></returns>

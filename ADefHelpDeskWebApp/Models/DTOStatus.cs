@@ -28,5 +28,7 @@ namespace AdefHelpDeskBase.Models
         [Key]
         public string StatusMessage { get; set; }
         public bool Success { get; set; }
+        public int TaskId { get; set; }
+        public List<string> Replies { get; set; } = [];
     }
 }
