@@ -502,7 +502,7 @@ namespace ADefHelpDeskWebApp.Controllers.InternalApi
                     {
                         #region **** Create Task record 
                         objAdefHelpDeskTasks.CreatedDate = DateTime.Now;
-                        objAdefHelpDeskTasks.Description = objTask.description;
+                        objAdefHelpDeskTasks.Description = objTask.description.Trim();
                         objAdefHelpDeskTasks.DueDate = Utility.CastToDate(objTask.dueDate);
                         objAdefHelpDeskTasks.EstimatedCompletion = Utility.CastToDate(objTask.estimatedCompletion);
                         objAdefHelpDeskTasks.EstimatedHours = objTask.estimatedHours;
@@ -514,7 +514,7 @@ namespace ADefHelpDeskWebApp.Controllers.InternalApi
                         objAdefHelpDeskTasks.RequesterName = objTask.requesterName;
                         objAdefHelpDeskTasks.RequesterPhone = objTask.requesterPhone;
                         objAdefHelpDeskTasks.Status = objTask.status; // Active, Cancelled, New, On Hold, Resolved
-                        objAdefHelpDeskTasks.TicketPassword = Utility.CreateRandomKey(10);
+                        objAdefHelpDeskTasks.TicketPassword = objTask.requesterPhone;//Utility.CreateRandomKey(10);
 
                         // Can only be set if the user is an Administrator
                         if (IsAdministrator)
@@ -556,6 +556,7 @@ namespace ADefHelpDeskWebApp.Controllers.InternalApi
                         Log.InsertLog(ConnectionString, objAdefHelpDeskTasks.TaskId, intUserId, $"{strLogUserName} created ticket.");
                         #endregion
 
+                        objDTOStatus.TaskId = objAdefHelpDeskTasks.TaskId;
                     }
                     catch (Exception ex)
                     {
@@ -770,19 +771,25 @@ namespace ADefHelpDeskWebApp.Controllers.InternalApi
                                 intOrginalAssignmentRole = objAdefHelpDeskTasks.AssignedRoleId;
 
                                 // Set values
-                                objAdefHelpDeskTasks.Description = objTask.description;
-                                objAdefHelpDeskTasks.DueDate = Utility.CastToDate(objTask.dueDate);
-                                objAdefHelpDeskTasks.EstimatedCompletion = Utility.CastToDate(objTask.estimatedCompletion);
-                                objAdefHelpDeskTasks.EstimatedHours = objTask.estimatedHours;
-                                objAdefHelpDeskTasks.EstimatedStart = Utility.CastToDate(objTask.estimatedStart);
-                                objAdefHelpDeskTasks.PortalId = Utility.CastNullableIntegerToPossibleNegativeOneInteger(objTask.portalId);
-                                objAdefHelpDeskTasks.Priority = objTask.priority;
-                                objAdefHelpDeskTasks.RequesterEmail = objTask.requesterEmail;
-                                objAdefHelpDeskTasks.RequesterName = objTask.requesterName;
-                                objAdefHelpDeskTasks.RequesterPhone = objTask.requesterPhone;
-                                objAdefHelpDeskTasks.Status = objTask.status; // Active, Cancelled, New, On Hold, Resolved
-                                objAdefHelpDeskTasks.AssignedRoleId = Utility.CastNullableIntegerToPossibleNegativeOneInteger(objTask.assignedRoleId);
-                                objAdefHelpDeskTasks.RequesterUserId = Utility.CastNullableIntegerToPossibleNegativeOneInteger(objTask.requesterUserId);
+                                objAdefHelpDeskTasks.Description = string.IsNullOrEmpty(objTask.description) ? objAdefHelpDeskTasks.Description : objTask.description;
+                                objAdefHelpDeskTasks.DueDate = string.IsNullOrEmpty(objTask.dueDate) ? objAdefHelpDeskTasks.DueDate : Utility.CastToDate(objTask.dueDate);
+                                objAdefHelpDeskTasks.EstimatedCompletion = string.IsNullOrEmpty(objTask.estimatedCompletion) ? 
+                                    objAdefHelpDeskTasks.EstimatedCompletion : Utility.CastToDate(objTask.estimatedCompletion);
+                                objAdefHelpDeskTasks.EstimatedHours = objTask.estimatedHours == null ? objAdefHelpDeskTasks.EstimatedHours : objTask.estimatedHours;
+                                objAdefHelpDeskTasks.EstimatedStart = string.IsNullOrEmpty(objTask.estimatedStart) ? 
+                                    objAdefHelpDeskTasks.EstimatedStart : Utility.CastToDate(objTask.estimatedStart);
+                                objAdefHelpDeskTasks.PortalId = objTask.portalId == null ? 
+                                    objAdefHelpDeskTasks.PortalId : Utility.CastNullableIntegerToPossibleNegativeOneInteger(objTask.portalId);
+                                objAdefHelpDeskTasks.Priority = string.IsNullOrEmpty(objTask.priority) ? objAdefHelpDeskTasks.Priority : objTask.priority;
+                                objAdefHelpDeskTasks.RequesterEmail = string.IsNullOrEmpty(objTask.requesterEmail) ? objAdefHelpDeskTasks.RequesterEmail : objTask.requesterEmail;
+                                objAdefHelpDeskTasks.RequesterName = string.IsNullOrEmpty(objTask.requesterName) ? objAdefHelpDeskTasks.RequesterName : objTask.requesterName;
+                                objAdefHelpDeskTasks.RequesterPhone = string.IsNullOrEmpty(objTask.requesterPhone) ? objAdefHelpDeskTasks.RequesterPhone : objTask.requesterPhone;
+                                objAdefHelpDeskTasks.Status = string.IsNullOrEmpty(objTask.status) ? 
+                                    objAdefHelpDeskTasks.Status : objTask.status; // Active, Cancelled, New, On Hold, Resolved
+                                objAdefHelpDeskTasks.AssignedRoleId = objTask.assignedRoleId == null ? 
+                                    objAdefHelpDeskTasks.AssignedRoleId : Utility.CastNullableIntegerToPossibleNegativeOneInteger(objTask.assignedRoleId);
+                                objAdefHelpDeskTasks.RequesterUserId = objTask.requesterUserId == null ? 
+                                    objAdefHelpDeskTasks.RequesterUserId : Utility.CastNullableIntegerToPossibleNegativeOneInteger(objTask.requesterUserId);
 
                                 context.SaveChanges();
                                 #endregion
@@ -800,6 +807,8 @@ namespace ADefHelpDeskWebApp.Controllers.InternalApi
                                 string strLogUserName = (IsAuthenticated) ? strCurrentUser : "[Unauthenticated]";
                                 Log.InsertLog(ConnectionString, objAdefHelpDeskTasks.TaskId, intUserId, $"{strLogUserName} updated ticket.");
                                 #endregion
+
+                                objDTOStatus.TaskId = objAdefHelpDeskTasks.TaskId;
                             }
                             else
                             {

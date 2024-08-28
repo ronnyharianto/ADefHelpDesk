@@ -29,5 +29,6 @@ namespace AdefHelpDeskBase.Models
         public string StatusMessage { get; set; }
         public bool Success { get; set; }
         public DTOTask Task { get; set; }
+        public List<string> Replies { get; set; } = [];
     }
 }

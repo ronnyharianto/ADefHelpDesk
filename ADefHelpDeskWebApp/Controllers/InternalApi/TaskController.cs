@@ -20,25 +20,14 @@
 //
 using ADefHelpDeskWebApp.Classes;
 using AdefHelpDeskBase.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using System;
-using System.Text;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IO;
 using AdefHelpDeskBase.Models.DataContext;
 using MessageReader;
 using MimeKit;
 using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Http;
 using Azure.Storage.Blobs.Models;
 
 namespace AdefHelpDeskBase.Controllers
